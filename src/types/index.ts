@@ -108,3 +108,21 @@ export interface InsightPost {
     tags: string[];
     suggestedQuestions: string[];
 }
+
+export interface SearchResultItem {
+    id: string;
+    title: string;
+    excerpt: string;
+    category: string;
+    tags: string[];
+    date: string;
+    url: string;
+    engagementScore: number;
+    score: number;
+}
+
+export interface SearchResponse {
+    query: string;
+    count: number;
+    results: SearchResultItem[];
+}

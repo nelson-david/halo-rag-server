@@ -4,6 +4,7 @@ import helmet from "helmet";
 import { env } from "./config/env.js";
 import chatRoutes from "./routes/chat.routes.js";
 import insightRoutes from "./routes/insight.routes.js";
+import searchRoutes from "./routes/search.routes.js";
 
 const app = express();
 
@@ -77,6 +78,7 @@ app.get("/api/health", (_req: Request, res: Response) => {
 // ==========================================
 app.use("/api/chat", chatRoutes);
 app.use("/api/insights", insightRoutes);
+app.use("/api/search", searchRoutes);
 
 // ==========================================
 // 404 Handler
@@ -112,6 +114,7 @@ const server = app.listen(env.PORT, () => {
     console.log(`📡 Endpoints:`);
     console.log(`   - POST http://localhost:${env.PORT}/api/chat`);
     console.log(`   - GET  http://localhost:${env.PORT}/api/insights`);
+    console.log(`   - GET  http://localhost:${env.PORT}/api/search?q=`);
     console.log(`   - GET  http://localhost:${env.PORT}/api/health`);
     console.log(
         `🧠 OpenAI Models: ${env.OPENAI_MODEL} | ${env.OPENAI_EMBEDDING_MODEL}`,

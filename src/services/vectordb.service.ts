@@ -130,12 +130,14 @@ class VectorDBService {
         collectionName: string = this.defaultCollection,
         queryVector: number[],
         limit: number = env.TOP_K_RESULTS,
+        scoreThreshold?: number,
     ): Promise<RetrievalResult[]> {
         try {
             const searchResponse = await this.client.search(collectionName, {
                 vector: queryVector,
                 limit,
                 with_payload: true,
+                score_threshold: scoreThreshold,
             });
 
             return searchResponse.map((hit) => ({
@@ -162,6 +164,9 @@ class VectorDBService {
                     score: this.cosineSimilarity(queryVector, pt.vector),
                     payload: pt.payload,
                 }))
+                .filter(
+                    (r) => scoreThreshold === undefined || r.score >= scoreThreshold,
+                )
                 .sort((a, b) => b.score - a.score)
                 .slice(0, limit);
         }
@@ -173,8 +178,14 @@ class VectorDBService {
     async queryContext(
         queryVector: number[],
         topK: number = env.TOP_K_RESULTS,
+        scoreThreshold?: number,
     ): Promise<RetrievalResult[]> {
-        return this.searchSimilar(this.defaultCollection, queryVector, topK);
+        return this.searchSimilar(
+            this.defaultCollection,
+            queryVector,
+            topK,
+            scoreThreshold,
+        );
     }
 }
 
